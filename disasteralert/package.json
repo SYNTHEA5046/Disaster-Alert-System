@@ -1,15 +1,12 @@
 {
-  "name": "disaster-alert-system",
+  "name": "disaster-alert-frontend",
   "version": "1.0.0",
-  "main": "server.js",
+  "homepage": "https://SYNTHEA5046.github.io/Disaster-Alert-System",
   "scripts": {
-    "start": "node server.js"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d ."
   },
-  "dependencies": {
-    "axios": "^1.12.2",
-    "dotenv": "^17.2.3",
-    "express": "^4.18.2",
-    "node-cron": "^4.2.1",
-    "socket.io": "^4.8.1"
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
   }
 }
