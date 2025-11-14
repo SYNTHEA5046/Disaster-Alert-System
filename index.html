@@ -4,61 +4,528 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Disaster Alert System</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 </head>
 <body>
-  <h1>🌪️ Disaster Alert System</h1>
-  <div id="alerts">
-    <p class="placeholder">No active alerts. Messages will appear here when sent.</p>
+  <header class="site-header">
+    <div class="top-bar">
+      <div class="top-left">Vellore Institute of Technology, Chennai</div>
+    </div>
+    <div class="brand-bar">
+      <div class="brand-left">
+        <img src="/logo.png" alt="Logo" class="site-logo" onerror="this.style.display='none'" />
+        <div class="site-title">
+          <div class="large">Disaster Alert System</div>
+        </div>
+      </div>
+      <nav class="main-nav" role="navigation" aria-label="Main navigation">
+        <ul>
+          <li><a href="#home" class="nav-link active" data-page="main-page">Home</a></li>
+          <li><a href="#alerts" class="nav-link" data-page="alerts-page">Help</a></li>
+          <li><a href="#mitigation" class="nav-link" data-page="mitigation-page">Mitigation</a></li>
+          <li><a href="#learn" class="nav-link" data-page="learn-page">Learn</a></li>
+          <li><a href="#about" class="nav-link" data-page="about-page">Developed By</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section id="main-page" class="page active">
+      <h1>Monitoring Point Mapping</h1>
+      <div id="map"></div>
+
+      <div class="monitoring-points-section">
+        <button id="toggleTable" class="toggle-button">
+          <span class="icon"></span> Monitoring Points Data
+        </button>
+        <div id="monitoringTable" class="monitoring-table-container">
+          <table class="monitoring-table">
+            <thead>
+              <tr>
+                <th>Location</th>
+                <th>Rainfall Index</th>
+                <th>Wind Speed</th>
+                <th>Altitude</th>
+                <th>Flood Risk</th>
+                <th>Seismic Activity</th>
+                <th>Cloud Index</th>
+                <th>24h Danger Level</th>
+              </tr>
+            </thead>
+            <tbody id="monitoringData">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="alerts">
+        <p class="placeholder">No active alerts. Messages will appear here when sent.</p>
+      </div>
+
+      <h2> Send Emergency Message</h2>
+      <form id="messageForm">
+        <label for="messageInput">Emergency Message</label>
+        <input 
+          type="text" 
+          id="messageInput" 
+          placeholder="Enter detailed emergency message" 
+          required 
+        />
+        <label for="priority">Priority Level</label>
+        <select id="priority">
+          <option value="high">🔴 High Priority - Immediate Action Required</option>
+          <option value="medium">🟡 Medium Priority - Important Notice</option>
+          <option value="low">🟢 Low Priority - General Information</option>
+        </select>
+        <button type="submit"> Send Alert</button>
+      </form>
+
+      <div class="metrics-panel">
+        <h3> Environmental Metrics</h3>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <h4> Rainfall Index</h4>
+            <div id="rainfall-index">Loading...</div>
+          </div>
+          <div class="metric-card">
+            <h4> Wind Speed</h4>
+            <div id="wind-speed">Loading...</div>
+          </div>
+          <div class="metric-card">
+            <h4> Altitude</h4>
+            <div id="altitude">Loading...</div>
+          </div>
+          <div class="metric-card">
+            <h4> Flood Risk</h4>
+            <div id="flood-risk">Loading...</div>
+          </div>
+          <div class="metric-card">
+            <h4> Seismic Activity</h4>
+            <div id="seismic-activity">Loading...</div>
+          </div>
+          <div class="metric-card">
+            <h4> Cloud Index</h4>
+            <div id="cloud-index">Loading...</div>
+          </div>
+        </div>
+        <div class="danger-level">
+          <h3>⚠️ 24-Hour Danger Level</h3>
+          <div id="danger-meter">
+            <div class="meter-fill" style="width: 0%"></div>
+          </div>
+          <p id="danger-description">Calculating risk level...</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about-page" class="page">
+      <h2>Developed By</h2>
+<div class="developers-grid">
+  <div class="developer-profile">
+    <img src="me.jpg" alt="Student Profile" class="profile-image">
+    <div class="profile-info">
+      <p><strong><em>Synthea Gautam</em></strong></p>
+      <p>Registration Number: 24BCE5186</p>
+    </div>
+  </div>
+  <div class="developer-profile">
+    <img src="chirag.jpg" alt="Student Profile" class="profile-image">
+    <div class="profile-info">
+      <p><strong><em>Chirag Banerjee</em></strong></p>
+      <p>Registration Number: 24BCE5046</p>
+    </div>
+  </div>
+</div>
+  <h2>Guided By</h2>
+<div class="project-guide-profile">
+  <img src="cn_sir.jpg" alt="Dr. Swaminathan Annadurai" class="profile-image">
+  <div class="profile-info">
+    <p><strong><em>Dr. Swaminathan Annadurai</em></strong></p>
+  </div>
+</div>
+    </section>
+
+    <section id="alerts-page" class="page">
+      <div class="alerts-info">
+        <h2>Help</h2>
+        <div class="alert-system-description">
+          <h3>How Our Alert System Works</h3>
+          <p>Our disaster alert system continuously monitors environmental conditions through a network of monitoring points across the region. Each monitoring point tracks:</p>
+          <ul>
+            <li><strong>Rainfall Index:</strong> Measures precipitation intensity in mm/h</li>
+            <li><strong>Wind Speed:</strong> Real-time wind velocity in km/h</li>
+            <li><strong>Altitude:</strong> Elevation data for flood risk assessment</li>
+            <li><strong>Seismic Activity:</strong> Ground vibration measurements</li>
+            <li><strong>Cloud Index:</strong> Cloud cover percentage indicating storm potential</li>
+          </ul>
+
+          <h3>Alert Priority Levels</h3>
+          <div class="priority-levels">
+            <div class="priority-item high">
+              <h4>🔴 High Priority</h4>
+              <p>Immediate action required. Indicates severe weather conditions, imminent flooding, or dangerous seismic activity.</p>
+            </div>
+            <div class="priority-item medium">
+              <h4>🟡 Medium Priority</h4>
+              <p>Important notice requiring attention. Possible weather deterioration or rising risk levels.</p>
+            </div>
+            <div class="priority-item low">
+              <h4>🟢 Low Priority</h4>
+              <p>General information and updates about environmental conditions.</p>
+            </div>
+          </div>
+
+          <h3>Risk Assessment</h3>
+          <p>The system calculates risk levels based on multiple factors:</p>
+          <ul>
+            <li><strong>Danger Level &lt; 30%:</strong> Normal conditions, regular monitoring</li>
+            <li><strong>Danger Level 30-70%:</strong> Elevated risk, increased surveillance</li>
+            <li><strong>Danger Level &gt; 70%:</strong> Critical situation, emergency protocols activated</li>
+          </ul>
+
+          <h3>Emergency Message System</h3>
+          <p>Authorized personnel can broadcast emergency messages through our alert system. Messages are:</p>
+          <ul>
+            <li>Instantly distributed to all connected monitoring points</li>
+            <li>Categorized by priority level for quick assessment</li>
+            <li>Archived for future reference and pattern analysis</li>
+            <li>Automatically triggered when danger levels exceed thresholds</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="mitigation-page" class="page">
+      <h2>Disaster Mitigation Scenarios & Alert Responses</h2>
+      <div class="mitigation-list">
+
+        <div class="mitigation-scenario">
+          <h3> 1. High Rainfall Index</h3>
+          <p><strong>Scenario:</strong> Continuous or sudden increase in rainfall intensity and duration.<br>
+          <strong>Possible Disaster:</strong> Flooding, landslides (especially in high-altitude or deforested regions).</p>
+          <ul>
+            <li><strong>Low Alert:</strong>
+              <ul>
+                <li>Notify local communities of potential heavy rainfall.</li>
+                <li>Check functionality of drainage systems.</li>
+                <li>Update weather forecasts every 3–6 hours.</li>
+              </ul>
+            </li>
+            <li><strong>Medium Alert:</strong>
+              <ul>
+                <li>Prepare temporary shelters and emergency supplies.</li>
+                <li>Close low-lying roadways and bridges as precaution.</li>
+                <li>Begin controlled release of water from reservoirs.</li>
+              </ul>
+            </li>
+            <li><strong>High Alert:</strong>
+              <ul>
+                <li>Immediate evacuation from flood-prone zones.</li>
+                <li>Deploy emergency response teams.</li>
+                <li>Shut down vulnerable power and communication lines.</li>
+                <li>Activate real-time alert systems (SMS, radio, satellite beacons).</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="mitigation-scenario">
+          <h3> 2. High Wind Speed + High Cloud Index</h3>
+          <p><strong>Scenario:</strong> Rapidly increasing wind speed with thick cloud coverage (storm formation).<br>
+          <strong>Possible Disaster:</strong> Cyclones, hurricanes, or severe thunderstorms.</p>
+          <ul>
+            <li><strong>Low Alert:</strong>
+              <ul>
+                <li>Inform public of possible storm formation.</li>
+                <li>Check emergency shelters and communication lines.</li>
+                <li>Keep local fishing and aviation activities on standby.</li>
+              </ul>
+            </li>
+            <li><strong>Medium Alert:</strong>
+              <ul>
+                <li>Close ports and coastal activities.</li>
+                <li>Secure power lines, roofs, and loose structures.</li>
+                <li>Ensure emergency power and food storage at critical facilities.</li>
+              </ul>
+            </li>
+            <li><strong>High Alert:</strong>
+              <ul>
+                <li>Enforce full evacuation of coastal and low-lying areas.</li>
+                <li>Activate continuous weather radar and satellite monitoring.</li>
+                <li>Deploy rapid response units and emergency communication nodes.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="mitigation-scenario">
+          <h3> 3. High Altitude + Heavy Rainfall</h3>
+          <p><strong>Scenario:</strong> Steep terrain or mountain regions experiencing heavy or sustained rainfall.<br>
+          <strong>Possible Disaster:</strong> Landslides, flash floods.</p>
+          <ul>
+            <li><strong>Low Alert:</strong>
+              <ul>
+                <li>Inspect slope stability and drainage channels.</li>
+                <li>Educate locals on identifying landslide warning signs.</li>
+              </ul>
+            </li>
+            <li><strong>Medium Alert:</strong>
+              <ul>
+                <li>Restrict movement in vulnerable slope zones.</li>
+                <li>Prepare evacuation plans and transport routes.</li>
+                <li>Position rescue teams at critical access points.</li>
+              </ul>
+            </li>
+            <li><strong>High Alert:</strong>
+              <ul>
+                <li>Immediate evacuation from high-risk slopes.</li>
+                <li>Shut off mountain roads and tunnels.</li>
+                <li>Deploy drones or satellite surveillance for real-time landslide detection.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="mitigation-scenario">
+          <h3> 4. Flood-Prone Region + High Rainfall Index + High Cloud Index</h3>
+          <p><strong>Scenario:</strong> Combination of dense clouds, heavy rainfall, and geographical susceptibility.<br>
+          <strong>Possible Disaster:</strong> Flash floods or major river flooding.</p>
+          <ul>
+            <li><strong>Low Alert:</strong>
+              <ul>
+                <li>Notify regional flood management teams.</li>
+                <li>Conduct inspection of dams and levees.</li>
+              </ul>
+            </li>
+            <li><strong>Medium Alert:</strong>
+              <ul>
+                <li>Pre-position rescue boats and relief materials.</li>
+                <li>Conduct public announcements and evacuation readiness drills.</li>
+              </ul>
+            </li>
+            <li><strong>High Alert:</strong>
+              <ul>
+                <li>Mandatory evacuation of affected flood zones.</li>
+                <li>Close transport networks through waterlogged zones.</li>
+                <li>Prioritize communication through mesh or satellite networks for isolated areas.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="mitigation-scenario">
+          <h3> 5. Increased Seismic Activity + High Altitude</h3>
+          <p><strong>Scenario:</strong> Earth tremors or fault line shifts in mountain or hilly regions.<br>
+          <strong>Possible Disaster:</strong> Earthquake-triggered landslides, aftershocks.</p>
+          <ul>
+            <li><strong>Low Alert:</strong>
+              <ul>
+                <li>Monitor ground vibration levels continuously.</li>
+                <li>Educate communities about earthquake safety measures.</li>
+              </ul>
+            </li>
+            <li><strong>Medium Alert:</strong>
+              <ul>
+                <li>Suspend high-altitude construction and mining operations.</li>
+                <li>Prepare medical and fire response teams in nearby towns.</li>
+              </ul>
+            </li>
+            <li><strong>High Alert:</strong>
+              <ul>
+                <li>Enforce immediate evacuation from unstable slopes and infrastructure.</li>
+                <li>Isolate gas and electric lines to prevent secondary hazards.</li>
+                <li>Deploy search and rescue drones post-event.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="mitigation-scenario">
+          <h3> 6. High Cloud Index + Seismic Activity + Rainfall</h3>
+          <p><strong>Scenario:</strong> Cloud formation and rainfall after minor seismic activity (can lead to mudslides or soil liquefaction).<br>
+          <strong>Possible Disaster:</strong> Combined flood–landslide risk.</p>
+          <ul>
+            <li><strong>Low Alert:</strong>
+              <ul>
+                <li>Increase frequency of geological monitoring.</li>
+                <li>Begin terrain scanning using satellite data.</li>
+              </ul>
+            </li>
+            <li><strong>Medium Alert:</strong>
+              <ul>
+                <li>Restrict road access through hilly passes.</li>
+                <li>Warn local populations of potential unstable ground.</li>
+              </ul>
+            </li>
+            <li><strong>High Alert:</strong>
+              <ul>
+                <li>Full evacuation of risk zones.</li>
+                <li>Ground-based and aerial monitoring for early detection of mudslides.</li>
+                <li>Coordinate with relief agencies for immediate intervention.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="mitigation-scenario">
+          <h3> 7. Cloud Index + Wind Speed (Without Rainfall)</h3>
+          <p><strong>Scenario:</strong> Formation of dry storms or dust storms (common in arid zones).<br>
+          <strong>Possible Disaster:</strong> Dust storms or sandstorms.</p>
+          <ul>
+            <li><strong>Low Alert:</strong>
+              <ul>
+                <li>Issue advisory for visibility and respiratory risks.</li>
+                <li>Encourage indoor safety during high winds.</li>
+              </ul>
+            </li>
+            <li><strong>Medium Alert:</strong>
+              <ul>
+                <li>Suspend outdoor transportation and aviation temporarily.</li>
+                <li>Set up emergency medical units for respiratory issues.</li>
+              </ul>
+            </li>
+            <li><strong>High Alert:</strong>
+              <ul>
+                <li>Declare no-travel zones.</li>
+                <li>Activate air filtration in essential facilities (hospitals, schools).</li>
+                <li>Emergency broadcasts through resilient communication nodes.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="learn-page" class="page">
+      <div class="learn-content">
+        <h2>About Our Project</h2>
+      <div class="about-content">
+        
+        <p>We're building a web-based simulation platform that showcases how resilient communication systems can operate even in the most challenging and hazardous environments. By integrating mesh networks, satellite links, and delay-tolerant protocols, our project demonstrates how reliable disaster alerts and messaging capabilities can be maintained in remote or regions with limited connectivity.</p>
+        
+        <p>Our goal is simple yet vital — We strive to support communities in remote areas during natural calamities by exploring technologies that ensure communication remains possible when it matters most.</p>
+        
+        <h3>Key Features</h3>
+        <ul>
+          <li><strong>Advanced Environmental Monitoring:</strong> Real-time tracking of rainfall, wind speed, cloud coverage, and more</li>
+          <li><strong>Terrain Analysis:</strong> Integration of altitude data and flood-prone region mapping</li>
+          <li><strong>Seismic Activity Monitoring:</strong> Tracking of geological instabilities and earthquake risks</li>
+          <li><strong>Predictive Alerts:</strong> 24-hour advance warning system based on multiple environmental factors</li>
+          <li><strong>Risk-Based Assessment:</strong> Customized alert levels based on regional characteristics</li>
+        </ul>
+        
+  <h2>Understanding Disaster Risk & Response in India</h2>
+
+  <div class="learn-block">
+    <h3>Climate Overview</h3>
+    <p><strong>India:</strong> Tropical monsoon climate with four seasons — winter, summer, monsoon, and post-monsoon. Climate varies by region: arid in the west, humid in the east, extreme in the north, and moderate in the south.</p>
+    <p><strong>Chennai:</strong> Tropical wet and dry climate. Hot and humid year-round, with rainfall mainly from the northeast monsoon (Oct–Dec). Vulnerable to cyclones and urban flooding.</p>
   </div>
 
-  <h2>📨 Send Emergency Message</h2>
-  <form id="messageForm">
-    <label for="messageInput">Emergency Message</label>
-    <input 
-      type="text" 
-      id="messageInput" 
-      placeholder="Enter detailed emergency message" 
-      required 
-    />
-    <label for="priority">Priority Level</label>
-    <select id="priority">
-      <option value="high">🔴 High Priority - Immediate Action Required</option>
-      <option value="medium">🟡 Medium Priority - Important Notice</option>
-      <option value="low">🟢 Low Priority - General Information</option>
-    </select>
-    <button type="submit">📢 Send Alert</button>
-  </form>
+  <div class="learn-block">
+    <h3>How Weather Escalates into Disasters</h3>
+    <ul>
+      <li><strong>North:</strong> Cloudbursts and glacier melts cause flash floods and landslides.</li>
+      <li><strong>East & Northeast:</strong> Monsoon rains flood rivers like the Brahmaputra and Ganga.</li>
+      <li><strong>West:</strong> Droughts and heatwaves in arid zones like Rajasthan.</li>
+      <li><strong>South & Coastal:</strong> Cyclones and storm surges affect Tamil Nadu, Odisha, Andhra Pradesh.</li>
+      <li><strong>Central:</strong> Irregular rainfall leads to both floods and droughts.</li>
+    </ul>
+  </div>
 
-  <script src="script.js">
-    document.addEventListener("DOMContentLoaded", () => {
-  fetch("/alerts")
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("alerts");
-      data.forEach(alert => {
-        const div = document.createElement("div");
-        div.innerHTML = `<strong>${alert.type}</strong>: ${alert.message}`;
-        container.appendChild(div);
-      });
-    });
+  <div class="learn-block">
+    <h3>Government Initiatives</h3>
+    <ul>
+      <li><strong>NDMA:</strong> National Disaster Management Authority — policy and planning.</li>
+      <li><strong>NDRF:</strong> Specialized rescue and relief force.</li>
+      <li><strong>IMD:</strong> Weather forecasts via <a href="https://mausam.imd.gov.in" target="_blank">Mausam</a> and <a href="https://play.google.com/store/apps/details?id=com.lightning.damini" target="_blank">Damini</a>.</li>
+      <li><strong>SACHET & CAP:</strong> Early warning systems for mobile/web alerts.</li>
+      <li><strong>ISRO:</strong> Satellites like INSAT and RISAT for real-time disaster monitoring.</li>
+    </ul>
+  </div>
 
-  const form = document.getElementById("messageForm");
-  form.addEventListener("submit", async (e) => {
+  <div class="learn-block">
+    <h3>Your Role in Safety</h3>
+    <ul>
+      <li>Stay updated with alerts from IMD and NDMA.</li>
+      <li>Prepare emergency kits with essentials.</li>
+      <li>Know your region’s risks and evacuation routes.</li>
+      <li>Trust only verified sources — avoid rumors.</li>
+      <li>Use mesh-network tools (like our project) to stay connected in remote areas.</li>
+    </ul>
+  </div>
+
+  <div class="learn-block">
+    <h3>How Our Website Helps</h3>
+    <p>Our <strong>Disaster Alert & Communication System</strong> predicts, informs, and connects people — even in low-connectivity zones. It uses real-time environmental data, mesh and delay-tolerant networks, and predictive algorithms to issue alerts up to 24 hours in advance. The system classifies severity, maps risk zones, and ensures that evacuation messages reach affected communities. It bridges the gap between technology and safety.</p>
+  </div>
+
+  <div class="learn-block">
+    <h3> Useful Links</h3>
+    <ul>
+      <li><a href="https://ndma.gov.in" target="_blank">NDMA – National Disaster Management Authority</a></li>
+      <li><a href="https://ndrf.gov.in" target="_blank">NDRF – National Disaster Response Force</a></li>
+      <li><a href="https://mausam.imd.gov.in" target="_blank">IMD – India Meteorological Department</a></li>
+      <li><a href="https://sachet.ncog.gov.in" target="_blank">SACHET Early Warning System</a></li>
+      <li><a href="https://bhuvan.nrsc.gov.in" target="_blank">ISRO Bhuvan – Geoportal</a></li>
+      <li><a href="https://cap.gov.in" target="_blank">CAP – Common Alerting Protocol</a></li>
+    </ul>
+  </div>
+
+        <h3>How It Works</h3>
+        <p>Our system continuously monitors multiple environmental factors to predict and assess potential disasters up to 24 hours in advance. By analyzing the correlation between wind speed, rainfall index, cloud coverage, and geographical features, we can:</p>
+        <ul>
+          <li>Predict severe weather events like cyclones and storms</li>
+          <li>Assess flooding risks in vulnerable areas</li>
+          <li>Evaluate landslide risks in high-altitude regions</li>
+          <li>Provide timely evacuation recommendations</li>
+        </ul>
+      </div>
+      <section class="learn-videos">
+  <h2>Learn About Disaster Safety & Management</h2>
+
+  <div class="video-block">
+    <h3>Severe Weather Safety</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/H6icWfyMBNk" 
+      title="Severe Weather Safety" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen></iframe>
+  </div>
+
+  <div class="video-block">
+    <h3>What Is Disaster Management? </h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/BaWnRznp1AU" 
+      title="What Is Disaster Management? | Class 8 - Geography | Learn With BYJU'S" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen></iframe>
+  </div>
+</section>
+    </section>
+
+    <script>
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', function(e) {
     e.preventDefault();
-    const message = document.getElementById("messageInput").value;
-    const priority = document.getElementById("priority").value;
-
-    await fetch("/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, priority })
-    });
-
-    alert("Message sent with priority: " + priority);
-    form.reset();
+    const page = link.dataset.page;
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
   });
 });
-  </script>
+
+// Toggle monitoring points table visibility
+document.getElementById('toggleTable').addEventListener('click', function() {
+  const tableContainer = document.getElementById('monitoringTable');
+  const isVisible = tableContainer.style.display === 'block';
+  tableContainer.style.display = isVisible ? 'none' : 'block';
+  this.innerHTML = isVisible ? '<span class="icon">📊</span> Show Monitoring Points Data' : '<span class="icon">📉</span> Hide Monitoring Points Data';
+});
+</script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
